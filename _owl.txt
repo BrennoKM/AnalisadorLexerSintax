@@ -9,9 +9,9 @@ Individuals:
 	Customer10,
 	Customer2,
 	Customer3,
-	Customer4,
-	Customer5,
-	Customer
+	Customer4,,
+	Customer5
+	Customer6
 	Customer7,
 	Customer8,
 	Customer9
@@ -67,7 +67,7 @@ Class: AmericanaHotPizza
 	SubClassOf:
 		NamedPizza,
 		hasTopping some JalapenoPepperTopping,
-		hasTopping some MozzarellaTopping,
+		DhasTopping some MozzarellaTopping2,
 		hasTopping some PepperoniTopping,
 		hasTopping some TomatoTopping
 	DisjointClasses:
@@ -81,7 +81,7 @@ Class: AmericanaHotPizza
 Class: AmericanaPizza
 	SubClassOf:
 		NamedPizza,
-		hasTopping some MozzarellaTopping,
+		hasTopping somew MozzarellaTopping,
 		hasTopping some PepperoniTopping,
 		hasTopping some TomatoTopping
 	DisjointClasses:
@@ -93,7 +93,7 @@ Class: AmericanaPizza
 Class: MargheritaPizza
 	SubClassOf:
 		NamedPizza,
-		hasTopping some MozzarellaTopping,
+		hasTopping some MozzarellaTopping2,
 		hasTopping some TomatoTopping,
 		hasTopping only
 		(MozzarellaTopping or TomatoTopping)
@@ -140,4 +140,21 @@ Class: PizzaTopping
 
 Class: Spiciness
 	EquivalentTo:
-	Hot1 , Medium1 , Mild1}
+	{Hot1 , Medium1 , Mild1}
+	DisjointClasses:
+		Pizza, PizzaBase, PizzaTopping
+
+Class: SohoPizza
+	SubClassOf:
+		NamedPizza,
+		hasTopping some MozzarellaTopping,
+		hasTopping some OliveTopping,
+		hasTopping some ParmesanTopping,
+		hasTopping some TomatoTopping,
+		hasTopping only
+		((MozzarellaTopping or OliveTopping or ParmesanTopping or TomatoToppin))
+	DisjointClasses:
+		AmericanaHotPizza, AmericanaPizza, MargheritaPizza, SohoPizza
+	Individuals:
+		SohoPizza1,
+		SohoPizza2

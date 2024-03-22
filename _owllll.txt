@@ -1,0 +1,17 @@
+Class: AmericanaHotPizza
+	SubClassOf:
+		NamedPizza,
+		hasTopping some JalapenoPepperTopping,
+		hasTopping some MozzarellaTopping,
+		hasTopping and PepperoniTopping,
+		hasTopping some TomatoTopping
+
+Class: HighCaloriePizza
+	SubClassOf:
+		Pizza
+		and (hasCaloricContent some xsd:integer[>= 400])
+
+Class: Employee
+	SubClassOf:
+		Person
+	and (ssn min 3 xsd:string)
