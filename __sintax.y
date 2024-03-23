@@ -55,7 +55,7 @@ corpo: classeand
   | propiedades disvinduals               
   | disvinduals                           
   | individuos
-  | individuos disvinduals                          
+  | individuos disvinduals                   
   ;
 
 disvinduals: owlindividuals individuos
@@ -66,6 +66,7 @@ disvinduals: owlindividuals individuos
 classes: classe
   | classes orand classe
   | classes virgula classe
+  | abreParen classes fechaParen
   ;
 
 individuos: indivi              
@@ -74,7 +75,7 @@ individuos: indivi
   ;
 
 propiedades: abreParen propiedades fechaParen           
-  | abreParen classes fechaParen                        
+  /* | abreParen classes fechaParen                         */
   | propiedades orand abreParen propiedades fechaParen                              
   | propiedades orand abreParen classes fechaParen         
   | propiedades virgula prop operand propcomp     
@@ -212,15 +213,16 @@ void verificaFechaAbre(int numError, char* token){
     cout << RED << "\t\tVerifique se está abrindo e fechando '{' '}' corretamente\n" << RESET;
     cout << RED << "\t\tVerifique se está abrindo e fechando '(' ')' corretamente\n" << RESET;
     cout << RED << "\t\tVerifique se está abrindo e fechando '[' ']' corretamente\n" << RESET;
-  }
-  if(contAbreChave != contFechaChave || token[0] == '{' || token[0] == '}'){
-    cout << RED << "\t\tVerifique se está abrindo e fechando '{' '}' corretamente\n" << RESET;
-  }
-  if(contAbreParen != contFechaParen || token[0] == '(' || token[0] == ')'){
-    cout << RED << "\t\tVerifique se está abrindo e fechando '(' ')' corretamente\n" << RESET;
-  }
-  if(contAbreCol != contFechaCol || token[0] == '[' || token[0] == ']'){
-    cout << RED << "\t\tVerifique se está abrindo e fechando '[' ']' corretamente\n" << RESET;
+  } else {
+    if(contAbreChave != contFechaChave || token[0] == '{' || token[0] == '}'){
+      cout << RED << "\t\tVerifique se está abrindo e fechando '{' '}' corretamente\n" << RESET;
+    }
+    if(contAbreParen != contFechaParen || token[0] == '(' || token[0] == ')'){
+      cout << RED << "\t\tVerifique se está abrindo e fechando '(' ')' corretamente\n" << RESET;
+    }
+    if(contAbreCol != contFechaCol || token[0] == '[' || token[0] == ']'){
+      cout << RED << "\t\tVerifique se está abrindo e fechando '[' ']' corretamente\n" << RESET;
+    }
   }
 }
 
