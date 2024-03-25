@@ -7,11 +7,11 @@ Class: Customer
 Individuals:
 	Customer1,
 	Customer10,
-	Customer2,
+	Customer2,,,
 	Customer3,
-	Customer4,,
-	Customer5
-	Customer6
+	Customer
+	Customer5,
+	Customer6,
 	Customer7,
 	Customer8,
 	Customer9
@@ -19,7 +19,7 @@ Individuals:
 Class: Employee
 	SubClassOf:
 		Person
-	ande (ssn min 1 xsd:string)
+	Aand (ssn min 1 xsd:string)
 	
 	Individuals:
 		Chef1,
@@ -152,7 +152,7 @@ Class: SohoPizza
 		hasTopping some ParmesanTopping,
 		hasTopping some TomatoTopping,
 		hasTopping only
-		((((MozzarellaTopping or OliveTopping or ParmesanTopping or TomatoToppin)))))
+		((((MozzarellaTopping or OliveTopping or ParmesanTopping or TomatoToppin))))
 	DisjointClasses:
 		AmericanaHotPizza, AmericanaPizza, MargheritaPizza, SohoPizza
 	Individuals:

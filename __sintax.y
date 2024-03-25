@@ -34,17 +34,19 @@ void resetAbreFecha(){
 
 exp: exp owlclass classe tipos    
   | owlclass classe tipos               
-  | exp owlclass classe error tipos
+  /* | exp owlclass classe error tipos
   | owlclass classe error tipos
-  | exp owlclass error classe tipos
-  | owlclass error classe tipos
-  | exp error owlclass classe tipos
-  | error owlclass classe tipos
+  | exp owlclass error classe tipos        
+  | owlclass error classe tipos             
+  | exp error owlclass classe tipos   
+  | error owlclass classe tipos */
+  | exp error tipos   
+  | error tipos
   ;
 
 tipos: owlsubclassof corpo      {tipoClasse = 1;}          
   | owlequivalentto corpo       {tipoClasse = 2;}             
-  | disvinduals                 {tipoClasse = 3;}          
+  | disvinduals                 {tipoClasse = 3;}
   ;
 
 corpo: classeand                           
@@ -56,6 +58,11 @@ corpo: classeand
   | disvinduals                           
   | individuos
   | individuos disvinduals                   
+  ;
+
+classeand: classe                      
+  | classe and                       
+  | classe virgula                 
   ;
 
 disvinduals: owlindividuals individuos
@@ -74,8 +81,7 @@ individuos: indivi
   | abreChave individuos fechaChave
   ;
 
-propiedades: abreParen propiedades fechaParen           
-  /* | abreParen classes fechaParen                         */
+propiedades: abreParen propiedades fechaParen
   | propiedades orand abreParen propiedades fechaParen                              
   | propiedades orand abreParen classes fechaParen         
   | propiedades virgula prop operand propcomp     
@@ -99,11 +105,6 @@ propcomp: classe
   | cardi classe                              
   | cardi dado                                
   | cardi dado abreCol relop cardi fechaCol  
-  ;
-
-classeand: classe                      
-  | classe and                         
-  | classe virgula                 
   ;
 
 owlclass:
@@ -258,6 +259,7 @@ int main(int argc, char ** argv)
   mapaError[19] = "Esperava-se '('";
   mapaError[20] = "Esperava-se ')'";
   mapaError[21] = "Esperava-se ','";
+  
 	/* se foi passado um nome de arquivo */
 	if (argc > 1)
 	{

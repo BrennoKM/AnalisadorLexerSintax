@@ -15,4 +15,4 @@ bison: __sintax.y
 
 executavel: bison flex
 	$(CC) lex.yy.c __sintax.tab.c -std=c++17 -o executavel
-	rm lex.yy.c __sintax.tab.c
+	rm lex.yy.c __sintax.tab.c __sintax.tab.h
