@@ -78,3 +78,14 @@ Esse projeto tem com objetivo reconhecer a linguavel OWL no modelo Manchester Sy
 	  ;
 	
 	Por quê? Isso deixa a gramática confusa, mas em troca, permite que os tokens lidos sejam impresso no terminal na ordem em que são lidos.
+## Exemplos de entrada
+----------------------------------------------------------------------------------------------------------------
+![image](https://github.com/BrennoKM/AnalisadorLexerSintax/assets/99992197/46915f3f-879c-43d5-b4a8-5a473d65b743)
+
+Saida: ![image](https://github.com/BrennoKM/AnalisadorLexerSintax/assets/99992197/dc12b728-e9c3-49cf-9232-dcaca7511521)
+----------------------------------------------------------------------------------------------------------------
+### Exemplo com problema na gramática
+![image](https://github.com/BrennoKM/AnalisadorLexerSintax/assets/99992197/91e3a819-03d5-450f-9cf4-f0764d22e5f4)
+
+Saida: ![image](https://github.com/BrennoKM/AnalisadorLexerSintax/assets/99992197/5e2e517b-468f-47a6-aa44-b34a7889f30b)
+----------------------------------------------------------------------------------------------------------------
