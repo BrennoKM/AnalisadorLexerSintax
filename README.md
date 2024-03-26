@@ -33,3 +33,13 @@ Esse projeto tem com objetivo reconhecer a linguavel OWL no modelo Manchester Sy
 ## Com o executavel em mãos, podemos fazer uso dele da seguinte maneira
 	./executavel < arquivo.txt
    > sendo "arquivo.txt" um arquivo de texto que serve pra de entrada
+
+  ### Alguns arquivos de testes já estão definidos no projeto, sendo eles:
+    	_owl.txt	
+   > Esse arquivo está repleto de erros na sua gramática.
+	
+	_owl2.txt
+   > Esse arquivo é um exemplo do arquivo _owl.txt corrigido
+
+	_owl3.txt
+   > Esse é um arquivo pequeno
