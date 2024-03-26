@@ -86,11 +86,11 @@ individuos: indivi
 
 propiedades: abreParen propiedades fechaParen                         
   | propiedades orand abreParen propiedades fechaParen                      
-  | propiedades orand abreParen classes fechaParen                   
+  | propiedades orand abreParen classes fechaParen
+  | propiedades orand prop operand propcomp                
   | propiedades virgula prop operand propcomp                         
   | propiedades virgula prop operand abreParen classes fechaParen          
-  | prop operand propcomp                                             
-  | propiedades orand prop operand propcomp                                             
+  | prop operand propcomp                                                                                        
   | prop operand abreParen classes fechaParen                         
   | propiedades orand prop operand abreParen classes fechaParen                         
   | prop operand abreParen propiedades fechaParen                    
