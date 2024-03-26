@@ -30,3 +30,6 @@ Esse projeto tem com objetivo reconhecer a linguavel OWL no modelo Manchester Sy
    
 	     rm lex.yy.c __sintax.tab.c __sintax.tab.h
 
+## Com o executavel em mãos, podemos fazer uso dele da seguinte maneira
+	./executavel < arquivo.txt
+   > sendo "arquivo.txt" um arquivo de texto que serve pra de entrada
