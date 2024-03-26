@@ -27,7 +27,7 @@ void resetAbreFecha(){
 
 %}
 
-%token OWLCLASS OWLSUBCLASSOF OWLDISJOINTCLASSES OWLINDIVIDUALS OWLEQUIVALENTTO CLASSE INDIVIDUO DADO AND OR PROPIEDADE CARDI OPERADOR RELOP 
+%token OWLCLASS OWLSUBCLASSOF OWLDISJOINTCLASSES OWLINDIVIDUALS OWLEQUIVALENTTO CLASSE INDIVIDUO DADO AND OR PROPIEDADE CARDI OPERADOR RELOP INVERSE
 
 
 %%
@@ -44,36 +44,39 @@ exp: exp owlclass classe tipos
   | error tipos
   ;
 
-tipos: owlsubclassof corpo      {tipoClasse = 1;}          
-  | owlequivalentto corpo       {tipoClasse = 2;}             
+tipos: owlsubclassof corpo      {tipoClasse = 1;}        
+  | owlequivalentto corpo       {tipoClasse = 2;} 
   | disvinduals                 {tipoClasse = 3;}
+  | owlequivalentto corpo 
+  owlsubclassof corpo           {tipoClasse = 4;}
   ;
 
-corpo: classeand                           
-  | classeand propiedades                 
-  | classeand disvinduals                 
+corpo: classeand                         
+  | classeand propiedades             
+  | classeand disvinduals              
   | propiedades                           
-  | classeand propiedades disvinduals     
-  | propiedades disvinduals               
+  | classeand propiedades disvinduals  
+  | propiedades disvinduals             
   | disvinduals                           
   | individuos
-  | individuos disvinduals                   
+  | individuos disvinduals                
   ;
 
 classeand: classe                      
-  | classe and                       
+  | classe and
+  | classe or classes                       
   | classe virgula                 
-  ;
-
-disvinduals: owlindividuals individuos
-  | disvinduals owlindividuals individuos
-  | owldisjointclasses classes
   ;
 
 classes: classe
   | classes orand classe
   | classes virgula classe
   | abreParen classes fechaParen
+  ;  
+
+disvinduals: owlindividuals individuos
+  | disvinduals owlindividuals individuos
+  | owldisjointclasses classes
   ;
 
 individuos: indivi              
@@ -81,14 +84,16 @@ individuos: indivi
   | abreChave individuos fechaChave
   ;
 
-propiedades: abreParen propiedades fechaParen
-  | propiedades orand abreParen propiedades fechaParen                              
-  | propiedades orand abreParen classes fechaParen         
-  | propiedades virgula prop operand propcomp     
-  | propiedades virgula prop operand abreParen classes fechaParen                
-  | prop operand propcomp                     
-  | prop operand abreParen classes fechaParen     
-  | prop operand abreParen propiedades fechaParen  
+propiedades: abreParen propiedades fechaParen                         
+  | propiedades orand abreParen propiedades fechaParen                      
+  | propiedades orand abreParen classes fechaParen                   
+  | propiedades virgula prop operand propcomp                         
+  | propiedades virgula prop operand abreParen classes fechaParen          
+  | prop operand propcomp                                             
+  | propiedades orand prop operand propcomp                                             
+  | prop operand abreParen classes fechaParen                         
+  | propiedades orand prop operand abreParen classes fechaParen                         
+  | prop operand abreParen propiedades fechaParen                    
   ;
 
 operand: orand
@@ -166,6 +171,7 @@ and:
 
 prop:
   {numError = 14;} PROPIEDADE              {cout << "PROPIEDADE ";}
+  | {numError = 22;} INVERSE {numError = 14;} PROPIEDADE              {cout << "INVERSE PROPIEDADE ";}
   ;
 
 abreCol:
@@ -232,6 +238,7 @@ int main(int argc, char ** argv)
   mapaClasse[1] = "Primitiva";
   mapaClasse[2] = "Definida";
   mapaClasse[3] = "Normal";
+  mapaClasse[4] = "Dupla";
 
   mapaLocal[1] = "SubClassOf";
   mapaLocal[2] = "EquivalentTo";
@@ -259,6 +266,7 @@ int main(int argc, char ** argv)
   mapaError[19] = "Esperava-se '('";
   mapaError[20] = "Esperava-se ')'";
   mapaError[21] = "Esperava-se ','";
+  mapaError[22] = "Esperava-se 'INVERSE'";
   
 	/* se foi passado um nome de arquivo */
 	if (argc > 1)

@@ -20,9 +20,10 @@ individuo {classe}{digito}+
 dado    ({letraMi}+):{letraMi}+
 owlClass "Class:"|"CLASS:"|"class:"
 owlSubClassOf "SubClassOf:"|"SUBCLASSOF:"|"subclassof:"
-owlDisjointClasses "DisjointClasses:"|"DISJOINTCLASSES:"|"disjointclasses"
+owlDisjointClasses "DisjointClasses:"|"DISJOINTCLASSES:"|"disjointclasses"|"DisjointWith"
 owlIndividuals "Individuals:"|"INDIVIDUALS:"|"individuals:"
 owlEquivalentTo "EquivalentTo:"|"EQUIVALENTTO:"|"equivalentto:"
+inverse "inverse"
 some    "some"|"SOME"
 all     "all"|"ALL"
 value   "value"|"VALUE"
@@ -35,13 +36,14 @@ and     "and"|"AND"
 or      "or"|"OR"
 only "only"|"ONLY"
 relop (">"|"<"|">="|"<=")
-propiedade  "has"{letraMa}{letras}|"is"{letraMa}{letras}"Of"|{letraMi}{letras}*
+propiedade  "has"{letraMa}{letras}|"is"{letraMa}{letras}"Of"|{letraMi}{letras}*|"wasCreatedIn"
 cardinalidade [0-9]+
 
 
 %%
 
-{brancos} ; 
+{brancos} ;
+{inverse} return INVERSE;
 {some}    return OPERADOR;
 {all}     return OPERADOR;
 {value}   return OPERADOR;

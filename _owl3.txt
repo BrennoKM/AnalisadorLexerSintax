@@ -12,4 +12,32 @@ Class: RegulatoryActivity
             and (grants only CnAObject)
             and (isauthorityOf only Regulator)
             and (transfers only
-                    (CoreObject or PoPObject))
+                    (CoreObject or PoPObject)) 
+
+
+Class: Offer
+    EquivalentTo: 
+        Event
+         and participatedIn only (DataCustomer or DataSupplier)
+         and wasCreatedIn only EconomicOffering
+         and participatedIn min 1 DataCustomer
+         and participatedIn min 1 DataSupplier
+         and wasCreatedIn exactly 1 EconomicOffering
+
+Class: Evaluated
+
+    EquivalentTo: 
+        BrokerServiceProvider or Connector or CoreParticipant
+    
+    SubClassOf: 
+        FunctionalComplex
+
+Class: Data
+
+        
+    SubClassOf: 
+        Resource,
+        inheresIn some Metadata,
+        inverse mediates some DataSovereigntyAct,
+        inverse mediates some InvokeDataOperation,
+        inverse mediates exactly 1 Ownership
