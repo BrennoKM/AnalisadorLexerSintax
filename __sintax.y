@@ -1,6 +1,9 @@
 %{
 #include <iostream>
 #include <unordered_map>
+#include <cstring>
+#include <vector>
+
 using std::cout;
 #define RED     "\x1b[31m"
 #define RESET   "\x1b[0m"
@@ -8,7 +11,19 @@ using std::cout;
 int cont=0;
 int contAbreParen, contFechaParen, contAbreCol, contFechaCol, contAbreChave, contFechaChave;
 int numError, tipoClasse, numLocal;
+
+bool flagClasse, flagEquivalent, flagSubClass, flagDisjoint, flagIndividuals, flagOnly, flagSome;
+char * classeAtual;
+char * classetext;
+
+char* ultimaPropiedade;
+int palavrasFechamento = 0;
+std::unordered_map<char*, std::vector<char*>> propiedadesFechamento;
+std::unordered_map<int, char*> classesFechamento;
 std::unordered_map<int, std::string> mapaClasse, mapaError, mapaLocal;
+
+
+
 int yylex(void);
 int yyparse(void);
 void yyerror(const char *);
@@ -114,31 +129,134 @@ propcomp: classe
 
 owlclass:
   {numError = 1;} OWLCLASS                 {cout << "\n\nOWLCLASS ";}
-  {resetAbreFecha();}
+  {resetAbreFecha(); 
+  flagClasse = true;
+  flagEquivalent = false;
+  flagSubClass = false;
+  flagDisjoint = false;
+  flagIndividuals = false;
+  flagOnly = false;
+  flagSome = false;
+  palavrasFechamento = 0;
+  propiedadesFechamento.clear();
+  }
+  
   ;
 
 classe:
   {numError = 2;} CLASSE                   {cout << "CLASSE ";}
+  {
+  if(flagClasse == true){
+    classeAtual = new char[strlen(yytext) + 1];
+    strcpy(classeAtual, yytext);
+    flagClasse = false;
+  }
+  
+  if(flagDisjoint == true){
+    if(strcmp(classeAtual, yytext) == 0){
+      cout << RED << "\nErro semântico: classe disjoint dela mesma" << " (linha " << yylineno << ")\n" << RESET;
+    }
+  }
+  if(flagSubClass == true && flagSome == true){
+    // classetext = new char[strlen(yytext) + 1];
+    // strcpy(classetext, yytext);
+    // propiedadesFechamento[ultimaPropiedade].push_back(classetext);
+    // cout << ultimaPropiedade << "\n";
+    // // cout << propiedadesFechamento[ultimaPropiedade].at(0) <<" wdawdawdwadwad\n";
+    // for(auto e : propiedadesFechamento[ultimaPropiedade]){
+    //   cout << e << "\n";
+    // }
+    // // delete[] classetext;
+
+
+    classesFechamento[palavrasFechamento] = new char[strlen(yytext) + 1];
+    strcpy(classesFechamento[palavrasFechamento], yytext);
+    palavrasFechamento++;
+    flagSome = false;
+    
+  }
+  if(flagOnly == true){
+    bool teste = false;
+    // if(propiedadesFechamento[ultimaPropiedade].size() == 0){
+    //   cout << "\nwwwwwwwwwwwwwwoiiiiiii\n";
+    //   // cout << propiedadesFechamento[ultimaPropiedade].at(0) <<"wdawdawdwadwad\n";
+    //   cout << RED << "\nErro semântico: o axioma de fechamento possui propiedades não declaradas '" << ultimaPropiedade << "' (linha " << yylineno << ")\n" << RESET;
+    // } else {
+    //   for(auto e : propiedadesFechamento[ultimaPropiedade]){
+    //     if(strcmp(e, yytext) == 0){
+    //       teste = true;
+    //       break;
+    //     }
+    //   }
+    //   if(teste == false){
+    //     cout << RED << "\nErro semântico: o axioma de fechamento possui classes não declaradas '" << yytext << "' (linha " << yylineno << ")\n" << RESET;
+    //   }
+    // }
+
+    // cout << RED << classesFechamento[0] << RESET << std::endl;
+    // cout << RED << classesFechamento[1] << RESET << std::endl;
+    // cout << RED << palavrasFechamento << RESET << std::endl;
+    // cout << RED << yytext << RESET << std::endl;
+    for(int i = 0; i <=palavrasFechamento-1; i++){
+      // cout << strcmp(classesFechamento[i], yytext) << " aquiii " << std::endl;
+      if(strcmp(classesFechamento[i], yytext) == 0){
+        
+        teste = true;
+      }
+    }
+    if(teste == false){
+      cout << RED << "\nErro semântico: o axioma de fechamento possui classes não declaradas '" << yytext << "' (linha " << yylineno << ")\n" << RESET;
+    }
+  }
+  
+  }
   ;
 
 owlsubclassof:
   {numError = 3;} OWLSUBCLASSOF            {cout << "\nOWLSUBCLASSOF \n";}
-  {numLocal = 1;}
+  {numLocal = 1;
+  flagSubClass = true;}
+  {if(flagDisjoint == true){
+    cout << RED << "\nErro semântico: SubClasse está após o disjoint" << " (linha " << yylineno << ")\n" << RESET;
+  }
+  if(flagIndividuals == true){
+    cout << RED << "\nErro semântico: SubClasse está após o individuals" << " (linha " << yylineno << ")\n" << RESET;
+  }
+  }
   ;
 
 owlequivalentto:
   {numError = 4;} OWLEQUIVALENTTO          {cout << "\nOWLEQUIVALENTTO \n";}
-  {numLocal = 2;}
+  {numLocal = 2;
+  flagEquivalent = true;}
+  {if(flagSubClass == true){
+    cout << RED << "\nErro semântico: Equivalent está após a SubClass" << " (linha " << yylineno << ")\n" << RESET;
+  }}
   ;
 
 owldisjointclasses:
   {numError = 4;} OWLDISJOINTCLASSES       {cout << "\nOWLDISJOINTCLASSES \n";}
-  {numLocal = 3;}
+  {numLocal = 3; 
+  flagDisjoint = true;
+  flagOnly = false;}
+  {if(flagIndividuals == true){
+    cout << RED << "\nErro semântico: Disjoint está após o Individuals" << " (linha " << yylineno << ")\n" << RESET;
+  }
+  if(flagEquivalent == false && flagSubClass == false){
+    cout << RED << "\nErro semântico: a Classe deve possuir pelo menos o corpo EquivalentTo ou SubClassOf" << " (linha " << yylineno << ")\n" << RESET;
+  }
+  }
   ;
 
 owlindividuals:
   {numError = 5;} OWLINDIVIDUALS           {cout << "\nOWLINDIVIDUALS \n";}
-  {numLocal = 4;}
+  {numLocal = 4;
+  flagIndividuals = true;
+  flagOnly = false;}
+  {if(flagEquivalent == false && flagSubClass == false){
+    cout << RED << "\nErro semântico: a Classe deve possuir pelo menos o corpo EquivalentTo ou SubClassOf" << " (linha " << yylineno << ")\n" << RESET;
+  }
+  }
   ;
 
 indivi:
@@ -159,6 +277,13 @@ relop:
 
 oper:
   {numError = 11;} OPERADOR                {cout << "OPERADOR ";}
+  {if(strcmp("some", yytext) == 0){
+    flagSome = true;
+  }
+  if(strcmp("only", yytext) == 0){
+    flagOnly = true;
+  }
+  }
   ;
 
 or:
@@ -167,11 +292,18 @@ or:
 
 and:
   {numError = 13;} AND                     {cout << "\nAND ";}
+  /* {cout << "\ncuzinho de galdino      ::::wwadndndnadn  ";} */
   ;
 
 prop:
   {numError = 14;} PROPIEDADE              {cout << "PROPIEDADE ";}
+  {
+    ultimaPropiedade = new char[strlen(yytext) + 1];
+    strcpy(ultimaPropiedade, yytext);}
   | {numError = 22;} INVERSE {numError = 14;} PROPIEDADE              {cout << "INVERSE PROPIEDADE ";}
+  {
+    ultimaPropiedade = new char[strlen(yytext) + 1];
+    strcpy(ultimaPropiedade, yytext);}
   ;
 
 abreCol:

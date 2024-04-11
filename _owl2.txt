@@ -152,9 +152,24 @@ Class: SohoPizza
 		hasTopping some ParmesanTopping,
 		hasTopping some TomatoTopping,
 		hasTopping only
-		((((MozzarellaTopping or OliveTopping or ParmesanTopping or TomatoToppin)))))
+		((((MozzarellaTopping or OliveTopping or ParmesanTopping or TomatoTopping)))))
 	DisjointClasses:
 		AmericanaHotPizza, AmericanaPizza, MargheritaPizza, SohoPizza
+	Individuals:
+		SohoPizza1,
+		SohoPizza2
+
+Class: SohoPizza
+	SubClassOf:
+		NamedPizza,
+		hasTopping some MozzarellaTopping,
+		hasTopping some OliveTopping,
+		hasTopping some ParmesanTopping,
+		hasTopping some TomatoTopping,
+		hasTopping only
+		(MozzarellaTopping or OliveTopping or ParmesanTopping or TomatoTopping)
+	DisjointClasses:
+		AmericanaHotPizza, AmericanaPizza, MargheritaPizza, Soho
 	Individuals:
 		SohoPizza1,
 		SohoPizza2

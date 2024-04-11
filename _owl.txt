@@ -145,16 +145,17 @@ Class: Spiciness
 		Pizza, PizzaBase, PizzaTopping
 
 Class: SohoPizza
+	DisjointClasses:
+		AmericanaHotPizza, AmericanaPizza, MargheritaPizza, SohoPizza
 	SubClassOf:
 		NamedPizza,
-		(hasTopping some MozzarellaTopping,
+		hasTopping some MozzarellaTopping,
 		hasTopping some OliveTopping,
 		hasTopping some ParmesanTopping,
 		hasTopping some TomatoTopping,
 		hasTopping only
 		((((MozzarellaTopping or OliveTopping or ParmesanTopping or TomatoToppin))))
-	DisjointClasses:
-		AmericanaHotPizza, AmericanaPizza, MargheritaPizza, SohoPizza
+	
 	Individuals:
 		SohoPizza1,
 		SohoPizza2
