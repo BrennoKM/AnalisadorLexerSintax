@@ -38,6 +38,7 @@ only "only"|"ONLY"
 relop (">"|"<"|">="|"<=")
 propiedade  "has"{letraMa}{letras}|"is"{letraMa}{letras}"Of"|{letraMi}{letras}*|"wasCreatedIn"
 cardinalidade [0-9]+
+cardinalidadeF [0-9]+"."[0-9]+
 
 
 %%
@@ -67,6 +68,7 @@ cardinalidade [0-9]+
 {dado} return DADO;
 {propiedade} return PROPIEDADE;
 {cardinalidade} return CARDI;
+{cardinalidadeF} return CARDIF;
 {relop} return RELOP;
 
 "{" return '{';

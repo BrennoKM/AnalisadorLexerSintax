@@ -12,13 +12,13 @@ int cont=0;
 int contAbreParen, contFechaParen, contAbreCol, contFechaCol, contAbreChave, contFechaChave;
 int numError, tipoClasse, numLocal;
 
-bool flagClasse, flagEquivalent, flagSubClass, flagDisjoint, flagIndividuals, flagOnly, flagSome;
+bool flagClasse, flagEquivalent, flagSubClass, flagDisjoint, flagIndividuals, flagOnly, flagSome, flagInteger, flagFloat;
 char * classeAtual;
 char * classetext;
 
 char* ultimaPropiedade;
 int palavrasFechamento = 0;
-std::unordered_map<char*, std::vector<char*>> propiedadesFechamento;
+std::unordered_map<std::string, std::vector<std::string>> propiedadesFechamento;
 std::unordered_map<int, char*> classesFechamento;
 std::unordered_map<int, std::string> mapaClasse, mapaError, mapaLocal;
 
@@ -42,7 +42,7 @@ void resetAbreFecha(){
 
 %}
 
-%token OWLCLASS OWLSUBCLASSOF OWLDISJOINTCLASSES OWLINDIVIDUALS OWLEQUIVALENTTO CLASSE INDIVIDUO DADO AND OR PROPIEDADE CARDI OPERADOR RELOP INVERSE
+%token OWLCLASS OWLSUBCLASSOF OWLDISJOINTCLASSES OWLINDIVIDUALS OWLEQUIVALENTTO CLASSE INDIVIDUO DADO AND OR PROPIEDADE CARDI CARDIF OPERADOR RELOP INVERSE
 
 
 %%
@@ -154,59 +154,76 @@ classe:
   
   if(flagDisjoint == true){
     if(strcmp(classeAtual, yytext) == 0){
-      cout << RED << "\nErro semântico: classe disjoint dela mesma" << " (linha " << yylineno << ")\n" << RESET;
+      cout << RED << "\nErro semântico: classe não pode ser disjoint de si propria" << " (linha " << yylineno << ")\n" << RESET;
     }
   }
   if(flagSubClass == true && flagSome == true){
-    // classetext = new char[strlen(yytext) + 1];
-    // strcpy(classetext, yytext);
-    // propiedadesFechamento[ultimaPropiedade].push_back(classetext);
+    if (propiedadesFechamento.find(ultimaPropiedade) != propiedadesFechamento.end()) {
+        // classetext = new char[strlen(yytext) + 1]; 
+        // strcpy(classetext, yytext);
+        // classetext = strdup(yytext);
+        std::string texto(yytext);
+        propiedadesFechamento[ultimaPropiedade].push_back(texto);
+    } else {
+        std::vector<std::string> novoVetor;
+        // classetext = new char[strlen(yytext) + 1];
+        // classetext = strdup(yytext);
+        std::string texto(yytext);
+        novoVetor.push_back(texto);
+        propiedadesFechamento[ultimaPropiedade] = novoVetor;
+    }
     // cout << ultimaPropiedade << "\n";
     // // cout << propiedadesFechamento[ultimaPropiedade].at(0) <<" wdawdawdwadwad\n";
+    // // delete[] classetext;
     // for(auto e : propiedadesFechamento[ultimaPropiedade]){
     //   cout << e << "\n";
     // }
-    // // delete[] classetext;
+    
 
 
-    classesFechamento[palavrasFechamento] = new char[strlen(yytext) + 1];
-    strcpy(classesFechamento[palavrasFechamento], yytext);
-    palavrasFechamento++;
+    // classesFechamento[palavrasFechamento] = new char[strlen(yytext) + 1];
+    // strcpy(classesFechamento[palavrasFechamento], yytext);
+    // palavrasFechamento++;
     flagSome = false;
     
   }
   if(flagOnly == true){
     bool teste = false;
-    // if(propiedadesFechamento[ultimaPropiedade].size() == 0){
-    //   cout << "\nwwwwwwwwwwwwwwoiiiiiii\n";
-    //   // cout << propiedadesFechamento[ultimaPropiedade].at(0) <<"wdawdawdwadwad\n";
-    //   cout << RED << "\nErro semântico: o axioma de fechamento possui propiedades não declaradas '" << ultimaPropiedade << "' (linha " << yylineno << ")\n" << RESET;
-    // } else {
-    //   for(auto e : propiedadesFechamento[ultimaPropiedade]){
-    //     if(strcmp(e, yytext) == 0){
-    //       teste = true;
-    //       break;
-    //     }
-    //   }
-    //   if(teste == false){
-    //     cout << RED << "\nErro semântico: o axioma de fechamento possui classes não declaradas '" << yytext << "' (linha " << yylineno << ")\n" << RESET;
-    //   }
-    // }
+    if(propiedadesFechamento[ultimaPropiedade].size() == 0){
+      // cout << propiedadesFechamento[ultimaPropiedade].at(0) <<"wdawdawdwadwad\n";
+      cout << RED << "\nErro semântico: o axioma de fechamento possui propiedades não declaradas '" << ultimaPropiedade << "' (linha " << yylineno << ")\n" << RESET;
+    } else {
+      for (auto& it : propiedadesFechamento) {
+        if(strcmp(it.first.c_str(), ultimaPropiedade) == 0){
+          for(auto& e : it.second){
+            if(strcmp(e.c_str(), yytext) == 0){
+              teste = true;
+              break;
+            }
+          }
+        }
+      }
+      if(teste == false){
+        cout << RED << "\nErro semântico: o axioma de fechamento possui classes não declaradas '" << yytext << "' para a propiedade '" << ultimaPropiedade <<"' (linha " << yylineno << ")\n" << RESET;
+      }
+    }
 
     // cout << RED << classesFechamento[0] << RESET << std::endl;
     // cout << RED << classesFechamento[1] << RESET << std::endl;
     // cout << RED << palavrasFechamento << RESET << std::endl;
     // cout << RED << yytext << RESET << std::endl;
-    for(int i = 0; i <=palavrasFechamento-1; i++){
-      // cout << strcmp(classesFechamento[i], yytext) << " aquiii " << std::endl;
-      if(strcmp(classesFechamento[i], yytext) == 0){
+    
+    // for(int i = 0; i <=palavrasFechamento-1; i++){
+    //   // cout << strcmp(classesFechamento[i], yytext) << " aquiii " << std::endl;
+    //   if(strcmp(classesFechamento[i], yytext) == 0){
         
-        teste = true;
-      }
-    }
-    if(teste == false){
-      cout << RED << "\nErro semântico: o axioma de fechamento possui classes não declaradas '" << yytext << "' (linha " << yylineno << ")\n" << RESET;
-    }
+    //     teste = true;
+    //   }
+    // }
+    // if(teste == false){
+    //   cout << RED << "\nErro semântico: o axioma de fechamento possui classes não declaradas '" << yytext << "' (linha " << yylineno << ")\n" << RESET;
+    // }
+    
   }
   
   }
@@ -265,10 +282,45 @@ indivi:
 
 dado:
   {numError = 8;} DADO                     {cout << "DADO ";}
+  {
+    std::string integer= "xsd:integer";
+    std::string floatnum= "xsd:float";
+    if(strcmp(integer.c_str(), yytext) == 0){
+      flagInteger = true;
+    }
+    if(strcmp(floatnum.c_str(), yytext) == 0){
+      flagFloat = true;
+    }
+  }
   ;
 
 cardi:
   {numError = 9;} CARDI                    {cout << "CARDI ";}
+  {
+    if(flagInteger == true){
+      flagInteger = false;
+    } else {
+      if(flagFloat == false){
+          cout << RED << "\nErro semântico: o tipo de dado deveria ser xsd:integer" << " (linha " << yylineno << ")\n" << RESET;
+      } else {
+        cout << RED << "\nErro semântico: o dado '" << yytext << "' ser do tipo xsd:float" << " (linha " << yylineno << ")\n" << RESET;
+        flagFloat = false;
+      }
+    }
+  }
+  | {numError = 9;} CARDIF                    {cout << "CARDIF ";}
+  {
+    if(flagFloat == true){
+      flagFloat = false;
+    } else {
+      if(flagInteger == false){
+        cout << RED << "\nErro semântico: o tipo de dado deveria ser xsd:float" << " (linha " << yylineno << ")\n" << RESET;
+      } else {
+       cout << RED << "\nErro semântico: o dado '" << yytext << "' ser do tipo xsd:integer" << " (linha " << yylineno << ")\n" << RESET;
+        flagInteger = false;
+      }
+    }
+  }
   ;
 
 relop:
@@ -367,6 +419,7 @@ void verificaFechaAbre(int numError, char* token){
 
 int main(int argc, char ** argv)
 {
+
   mapaClasse[1] = "Primitiva";
   mapaClasse[2] = "Definida";
   mapaClasse[3] = "Normal";

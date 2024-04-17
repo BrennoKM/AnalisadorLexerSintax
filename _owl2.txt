@@ -173,3 +173,8 @@ Class: SohoPizza
 	Individuals:
 		SohoPizza1,
 		SohoPizza2
+
+Class: LowCaloriePizza
+	EquivalentTo:
+		Pizza
+		and (hasCaloricContent some xsd:float[<= 231])
