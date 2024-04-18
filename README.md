@@ -1,4 +1,4 @@
-# Analisador Léxico e Sintático
+# Analisador Léxico, Sintático e Semântico
 
 Esse projeto tem com objetivo reconhecer a linguavel OWL no modelo Manchester Syntax
 
@@ -78,6 +78,7 @@ Esse projeto tem com objetivo reconhecer a linguavel OWL no modelo Manchester Sy
 	  ;
 	
 	Por quê? Isso deixa a gramática confusa, mas em troca, permite que os tokens lidos sejam impresso no terminal na ordem em que são lidos.
+
 ## Exemplos de entrada
 ----------------------------------------------------------------------------------------------------------------
 ![image](https://github.com/BrennoKM/AnalisadorLexerSintax/assets/99992197/46915f3f-879c-43d5-b4a8-5a473d65b743)
