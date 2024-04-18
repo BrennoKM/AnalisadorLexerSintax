@@ -36,10 +36,10 @@ Esse projeto tem com objetivo reconhecer a linguavel OWL no modelo Manchester Sy
 
   ### Alguns arquivos de testes já estão definidos no projeto, sendo eles:
     _owl.txt	
-   > Esse arquivo está repleto de erros na sua gramática.
+   > Esse arquivo está repleto de erros na sua gramática e também erros semânticos.
 	
 	_owl2.txt
-   > Esse arquivo é um exemplo do arquivo _owl.txt corrigido.
+   > Esse arquivo é um exemplo do arquivo _owl.txt corrigido, sem erros sintáticos e sem erros semânticos.
 
 	_owl3.txt
    > Esse é um arquivo pequeno que eu recomendo para fazer testes rápidos do projeto.
