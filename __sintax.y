@@ -450,7 +450,7 @@ int main(int argc, char ** argv)
 	yyparse();
 
   int i = 0;
-  cout << "\nData Propertys encontradas:\n";
+  cout << "\n\nData Propertys encontradas:\n";
   for(auto& e : dataProps){
     cout << "\t" << e << "\n";
     i++;

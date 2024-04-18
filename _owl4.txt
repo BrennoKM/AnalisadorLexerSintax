@@ -1,17 +1,19 @@
-Class: AmericanaHotPizza
+Class: HighCaloriePizza
 	SubClassOf:
-		NamedPizza,
-		hasTopping some JalapenoPepperTopping,
-		hasTopping some MozzarellaTopping,
-		hasTopping and PepperoniTopping,
-		hasTopping some TomatoTopping
+		Pizza
+		and (hasCaloricContent some xsd:integer[>= 399.9])
 
 Class: HighCaloriePizza
 	SubClassOf:
 		Pizza
-		and (hasCaloricContent some xsd:integer[>= 400])
+		and (hasCaloricContent some xsd:float[>= 400])
 
-Class: Employee
+
+Class: HighCaloriePizza
 	SubClassOf:
-		Person
-	and (ssn min 3 xsd:string)
+		Pizza
+		and (hasCaloricContent some xsd:string[>= 20])
+
+
+
+		

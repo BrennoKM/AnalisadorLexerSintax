@@ -1,7 +1,7 @@
 Class: SohoPizza
 	SubClassOf:
 		NamedPizza,
-		hasTopping some MozzarellaTopping,
+		hasSpiciness some MozzarellaTopping,
 		hasTopping some OliveTopping,
 		hasTopping some ParmesanTopping,
 		hasTopping some TomatoTopping,
@@ -12,3 +12,5 @@ Class: SohoPizza
 	Individuals:
 		SohoPizza1,
 		SohoPizza2
+
+
