@@ -101,4 +101,16 @@ Saida: ![image](https://github.com/BrennoKM/AnalisadorLexerSintax/assets/9999219
 
 Saida: ![image](https://github.com/BrennoKM/AnalisadorLexerSintaxSemantic/assets/99992197/507f0007-b617-4743-9674-fd16f0a6f5c3)
 ----------------------------------------------------------------------------------------------------------------
+### Exemplo 3: erro semântico
+![image](https://github.com/BrennoKM/AnalisadorLexerSintaxSemantic/assets/99992197/547d7e0a-f141-4caf-9fab-f7a93a8b72f2)
+> Note que o axioma de fechamento possui MozzarellaTopping, a classe possui declarações com MozzarellaTopping, mas com uma propiedade diferente da usada no axioma de fechamento.
 
+Saida: ![image](https://github.com/BrennoKM/AnalisadorLexerSintaxSemantic/assets/99992197/fa1c0abf-487c-40f1-9ffd-2d90d588ca0e)
+----------------------------------------------------------------------------------------------------------------
+### Exemplo 4: erro semântico
+![image](https://github.com/BrennoKM/AnalisadorLexerSintaxSemantic/assets/99992197/fee565e6-ae6e-4399-a808-eb2de279aa4a)
+> Pro analisador sintático, no exemplo acima não será encontrado nenhum problema, mas é fácil observar que os tipos de dados estão incoerentes com as cardinalidades.
+
+Saida: ![image](https://github.com/BrennoKM/AnalisadorLexerSintaxSemantic/assets/99992197/1e7ac73a-b0f5-4ee2-b60d-643c3efd6487)
+
+----------------------------------------------------------------------------------------------------------------
