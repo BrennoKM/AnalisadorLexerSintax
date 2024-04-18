@@ -12,14 +12,14 @@ int cont=0;
 int contAbreParen, contFechaParen, contAbreCol, contFechaCol, contAbreChave, contFechaChave;
 int numError, tipoClasse, numLocal;
 
-bool flagClasse, flagEquivalent, flagSubClass, flagDisjoint, flagIndividuals, flagOnly, flagSome, flagInteger, flagFloat;
+bool flagClasse, flagEquivalent, flagSubClass, flagDisjoint, flagIndividuals, flagOnly, flagSome, flagInteger, flagFloat, flagDado;
 char * classeAtual;
 char * classetext;
 
 char* ultimaPropiedade;
 int palavrasFechamento = 0;
 std::unordered_map<std::string, std::vector<std::string>> propiedadesFechamento;
-std::unordered_map<int, char*> classesFechamento;
+std::vector<std::string> dataProps, objProps;
 std::unordered_map<int, std::string> mapaClasse, mapaError, mapaLocal;
 
 
@@ -48,13 +48,7 @@ void resetAbreFecha(){
 %%
 
 exp: exp owlclass classe tipos    
-  | owlclass classe tipos               
-  /* | exp owlclass classe error tipos
-  | owlclass classe error tipos
-  | exp owlclass error classe tipos        
-  | owlclass error classe tipos             
-  | exp error owlclass classe tipos   
-  | error owlclass classe tipos */
+  | owlclass classe tipos
   | exp error tipos   
   | error tipos
   ;
@@ -129,16 +123,18 @@ propcomp: classe
 
 owlclass:
   {numError = 1;} OWLCLASS                 {cout << "\n\nOWLCLASS ";}
-  {resetAbreFecha(); 
-  flagClasse = true;
-  flagEquivalent = false;
-  flagSubClass = false;
-  flagDisjoint = false;
-  flagIndividuals = false;
-  flagOnly = false;
-  flagSome = false;
-  palavrasFechamento = 0;
-  propiedadesFechamento.clear();
+  {
+    resetAbreFecha(); 
+    flagClasse = true;
+    flagEquivalent = false;
+    flagSubClass = false;
+    flagDisjoint = false;
+    flagIndividuals = false;
+    flagOnly = false;
+    flagSome = false;
+    flagDado = false;
+    palavrasFechamento = 0;
+    propiedadesFechamento.clear();
   }
   
   ;
@@ -146,133 +142,108 @@ owlclass:
 classe:
   {numError = 2;} CLASSE                   {cout << "CLASSE ";}
   {
-  if(flagClasse == true){
-    classeAtual = new char[strlen(yytext) + 1];
-    strcpy(classeAtual, yytext);
-    flagClasse = false;
-  }
-  
-  if(flagDisjoint == true){
-    if(strcmp(classeAtual, yytext) == 0){
-      cout << RED << "\nErro semântico: classe não pode ser disjoint de si propria" << " (linha " << yylineno << ")\n" << RESET;
+    if(flagClasse == true){
+      classeAtual = new char[strlen(yytext) + 1];
+      strcpy(classeAtual, yytext);
+      flagClasse = false;
     }
-  }
-  if(flagSubClass == true && flagSome == true){
-    if (propiedadesFechamento.find(ultimaPropiedade) != propiedadesFechamento.end()) {
-        // classetext = new char[strlen(yytext) + 1]; 
-        // strcpy(classetext, yytext);
-        // classetext = strdup(yytext);
-        std::string texto(yytext);
-        propiedadesFechamento[ultimaPropiedade].push_back(texto);
-    } else {
-        std::vector<std::string> novoVetor;
-        // classetext = new char[strlen(yytext) + 1];
-        // classetext = strdup(yytext);
-        std::string texto(yytext);
-        novoVetor.push_back(texto);
-        propiedadesFechamento[ultimaPropiedade] = novoVetor;
+    if(flagDisjoint == true){
+      if(strcmp(classeAtual, yytext) == 0){
+        cout << RED << "\nErro semântico: classe não pode ser disjoint de si propria" << " (linha " << yylineno << ")\n" << RESET;
+      }
     }
-    // cout << ultimaPropiedade << "\n";
-    // // cout << propiedadesFechamento[ultimaPropiedade].at(0) <<" wdawdawdwadwad\n";
-    // // delete[] classetext;
-    // for(auto e : propiedadesFechamento[ultimaPropiedade]){
-    //   cout << e << "\n";
-    // }
-    
-
-
-    // classesFechamento[palavrasFechamento] = new char[strlen(yytext) + 1];
-    // strcpy(classesFechamento[palavrasFechamento], yytext);
-    // palavrasFechamento++;
-    flagSome = false;
-    
-  }
-  if(flagOnly == true){
-    bool teste = false;
-    if(propiedadesFechamento[ultimaPropiedade].size() == 0){
-      // cout << propiedadesFechamento[ultimaPropiedade].at(0) <<"wdawdawdwadwad\n";
-      cout << RED << "\nErro semântico: o axioma de fechamento possui propiedades não declaradas '" << ultimaPropiedade << "' (linha " << yylineno << ")\n" << RESET;
-    } else {
-      for (auto& it : propiedadesFechamento) {
-        if(strcmp(it.first.c_str(), ultimaPropiedade) == 0){
-          for(auto& e : it.second){
-            if(strcmp(e.c_str(), yytext) == 0){
-              teste = true;
-              break;
+    if((flagSubClass == true || flagEquivalent == true) && flagSome == true){
+      if (propiedadesFechamento.find(ultimaPropiedade) != propiedadesFechamento.end()) {
+          std::string texto(yytext);
+          propiedadesFechamento[ultimaPropiedade].push_back(texto);
+      } else {
+          std::vector<std::string> novoVetor;
+          std::string texto(yytext);
+          novoVetor.push_back(texto);
+          propiedadesFechamento[ultimaPropiedade] = novoVetor;
+      }
+      std::string prop(ultimaPropiedade);
+      std::string linha = " (linha " + std::to_string(yylineno) + ")";
+      prop += linha;
+      objProps.push_back(prop);
+      flagSome = false;
+    }
+    if(flagOnly == true){
+      bool teste = false;
+      if(propiedadesFechamento[ultimaPropiedade].size() == 0){
+        cout << RED << "\nErro semântico: o axioma de fechamento possui propiedades não declaradas '" << ultimaPropiedade << "' (linha " << yylineno << ")\n" << RESET;
+      } else {
+        for (auto& it : propiedadesFechamento) {
+          if(strcmp(it.first.c_str(), ultimaPropiedade) == 0){
+            for(auto& e : it.second){
+              if(strcmp(e.c_str(), yytext) == 0){
+                teste = true;
+                break;
+              }
             }
           }
         }
-      }
-      if(teste == false){
-        cout << RED << "\nErro semântico: o axioma de fechamento possui classes não declaradas '" << yytext << "' para a propiedade '" << ultimaPropiedade <<"' (linha " << yylineno << ")\n" << RESET;
+        if(teste == false){
+          cout << RED << "\nErro semântico: o axioma de fechamento possui classes não declaradas '" << yytext << "' para a propiedade '" << ultimaPropiedade <<"' (linha " << yylineno << ")\n" << RESET;
+        }
       }
     }
-
-    // cout << RED << classesFechamento[0] << RESET << std::endl;
-    // cout << RED << classesFechamento[1] << RESET << std::endl;
-    // cout << RED << palavrasFechamento << RESET << std::endl;
-    // cout << RED << yytext << RESET << std::endl;
-    
-    // for(int i = 0; i <=palavrasFechamento-1; i++){
-    //   // cout << strcmp(classesFechamento[i], yytext) << " aquiii " << std::endl;
-    //   if(strcmp(classesFechamento[i], yytext) == 0){
-        
-    //     teste = true;
-    //   }
-    // }
-    // if(teste == false){
-    //   cout << RED << "\nErro semântico: o axioma de fechamento possui classes não declaradas '" << yytext << "' (linha " << yylineno << ")\n" << RESET;
-    // }
-    
-  }
-  
   }
   ;
 
 owlsubclassof:
   {numError = 3;} OWLSUBCLASSOF            {cout << "\nOWLSUBCLASSOF \n";}
-  {numLocal = 1;
-  flagSubClass = true;}
-  {if(flagDisjoint == true){
-    cout << RED << "\nErro semântico: SubClasse está após o disjoint" << " (linha " << yylineno << ")\n" << RESET;
-  }
-  if(flagIndividuals == true){
-    cout << RED << "\nErro semântico: SubClasse está após o individuals" << " (linha " << yylineno << ")\n" << RESET;
-  }
+  {
+    numLocal = 1;
+    flagSubClass = true;
+    flagOnly = false;
+    palavrasFechamento = 0;
+    propiedadesFechamento.clear();
+  
+    if(flagDisjoint == true){
+      cout << RED << "\nErro semântico: SubClasse está após o disjoint" << " (linha " << yylineno << ")\n" << RESET;
+    }
+    if(flagIndividuals == true){
+      cout << RED << "\nErro semântico: SubClasse está após o individuals" << " (linha " << yylineno << ")\n" << RESET;
+    }
   }
   ;
 
 owlequivalentto:
   {numError = 4;} OWLEQUIVALENTTO          {cout << "\nOWLEQUIVALENTTO \n";}
-  {numLocal = 2;
-  flagEquivalent = true;}
-  {if(flagSubClass == true){
-    cout << RED << "\nErro semântico: Equivalent está após a SubClass" << " (linha " << yylineno << ")\n" << RESET;
-  }}
+  {
+    numLocal = 2;
+    flagEquivalent = true;
+    if(flagSubClass == true){
+      cout << RED << "\nErro semântico: Equivalent está após a SubClass" << " (linha " << yylineno << ")\n" << RESET;
+    }
+  }
   ;
 
 owldisjointclasses:
   {numError = 4;} OWLDISJOINTCLASSES       {cout << "\nOWLDISJOINTCLASSES \n";}
-  {numLocal = 3; 
-  flagDisjoint = true;
-  flagOnly = false;}
-  {if(flagIndividuals == true){
-    cout << RED << "\nErro semântico: Disjoint está após o Individuals" << " (linha " << yylineno << ")\n" << RESET;
-  }
-  if(flagEquivalent == false && flagSubClass == false){
-    cout << RED << "\nErro semântico: a Classe deve possuir pelo menos o corpo EquivalentTo ou SubClassOf" << " (linha " << yylineno << ")\n" << RESET;
-  }
+  {
+    numLocal = 3; 
+    flagDisjoint = true;
+    flagOnly = false;
+    if(flagIndividuals == true){
+      cout << RED << "\nErro semântico: Disjoint está após o Individuals" << " (linha " << yylineno << ")\n" << RESET;
+    }
+    if(flagEquivalent == false && flagSubClass == false){
+      cout << RED << "\nErro semântico: a Classe deve possuir pelo menos o corpo EquivalentTo ou SubClassOf" << " (linha " << yylineno << ")\n" << RESET;
+    }
   }
   ;
 
 owlindividuals:
   {numError = 5;} OWLINDIVIDUALS           {cout << "\nOWLINDIVIDUALS \n";}
-  {numLocal = 4;
-  flagIndividuals = true;
-  flagOnly = false;}
-  {if(flagEquivalent == false && flagSubClass == false){
-    cout << RED << "\nErro semântico: a Classe deve possuir pelo menos o corpo EquivalentTo ou SubClassOf" << " (linha " << yylineno << ")\n" << RESET;
-  }
+  {
+    numLocal = 4;
+    flagIndividuals = true;
+    flagOnly = false;
+    if(flagEquivalent == false && flagSubClass == false){
+      cout << RED << "\nErro semântico: a Classe deve possuir pelo menos o corpo EquivalentTo ou SubClassOf" << " (linha " << yylineno << ")\n" << RESET;
+    }
   }
   ;
 
@@ -291,6 +262,11 @@ dado:
     if(strcmp(floatnum.c_str(), yytext) == 0){
       flagFloat = true;
     }
+    flagDado = true;
+    std::string prop(ultimaPropiedade);
+    std::string linha = " (linha " + std::to_string(yylineno) + ")";
+    prop += linha;
+    dataProps.push_back(prop);
   }
   ;
 
@@ -300,11 +276,13 @@ cardi:
     if(flagInteger == true){
       flagInteger = false;
     } else {
-      if(flagFloat == false){
-          cout << RED << "\nErro semântico: o tipo de dado deveria ser xsd:integer" << " (linha " << yylineno << ")\n" << RESET;
-      } else {
-        cout << RED << "\nErro semântico: o dado '" << yytext << "' ser do tipo xsd:float" << " (linha " << yylineno << ")\n" << RESET;
-        flagFloat = false;
+      if(flagDado == true){
+        if(flagFloat == false){
+            cout << RED << "\nErro semântico: o tipo de dado deveria ser xsd:integer" << " (linha " << yylineno << ")\n" << RESET;
+        } else {
+          cout << RED << "\nErro semântico: o dado '" << yytext << "' deve ser do tipo xsd:float" << " (linha " << yylineno << ")\n" << RESET;
+          flagFloat = false;
+        }
       }
     }
   }
@@ -313,11 +291,13 @@ cardi:
     if(flagFloat == true){
       flagFloat = false;
     } else {
-      if(flagInteger == false){
-        cout << RED << "\nErro semântico: o tipo de dado deveria ser xsd:float" << " (linha " << yylineno << ")\n" << RESET;
-      } else {
-       cout << RED << "\nErro semântico: o dado '" << yytext << "' ser do tipo xsd:integer" << " (linha " << yylineno << ")\n" << RESET;
-        flagInteger = false;
+      if(flagDado == true){
+        if(flagInteger == false){
+          cout << RED << "\nErro semântico: o tipo de dado deveria ser xsd:float" << " (linha " << yylineno << ")\n" << RESET;
+        } else {
+        cout << RED << "\nErro semântico: o dado '" << yytext << "' deve ser do tipo xsd:integer" << " (linha " << yylineno << ")\n" << RESET;
+          flagInteger = false;
+        }
       }
     }
   }
@@ -344,7 +324,6 @@ or:
 
 and:
   {numError = 13;} AND                     {cout << "\nAND ";}
-  /* {cout << "\ncuzinho de galdino      ::::wwadndndnadn  ";} */
   ;
 
 prop:
@@ -469,6 +448,21 @@ int main(int argc, char ** argv)
 	}
 
 	yyparse();
+
+  int i = 0;
+  cout << "\nData Propertys encontradas:\n";
+  for(auto& e : dataProps){
+    cout << "\t" << e << "\n";
+    i++;
+  }
+  cout << "\n\tContagem total: " << i << "\n";
+  i = 0;
+  cout << "\nObject Propertys encontradas:\n";
+  for(auto& e : objProps){
+    cout << "\t" << e << "\n";
+    i++;
+  }
+  cout << "\n\tContagem total: " << i << "\n";
 }
 
 void yyerror(const char * s)
