@@ -81,7 +81,7 @@ Esse projeto tem com objetivo reconhecer a linguavel OWL no modelo Manchester Sy
 
 ## Analise Semântica
 - A analise semântica foi feita em conjunto com a análise sintática com o auxilio de flags e estruturas de dados para que sejam feitas verificações em pontos desejados.
-  Exemplo de saída: ![image](https://github.com/BrennoKM/AnalisadorLexerSintaxSemantic/assets/99992197/13458208-788f-4795-9847-3b9ea5ff9a03)
+>Exemplo de exibição de um erro semântico: ![image](https://github.com/BrennoKM/AnalisadorLexerSintaxSemantic/assets/99992197/13458208-788f-4795-9847-3b9ea5ff9a03)
 
 
 ## Exemplos de entrada
@@ -90,8 +90,15 @@ Esse projeto tem com objetivo reconhecer a linguavel OWL no modelo Manchester Sy
 
 Saida: ![image](https://github.com/BrennoKM/AnalisadorLexerSintax/assets/99992197/dc12b728-e9c3-49cf-9232-dcaca7511521)
 ----------------------------------------------------------------------------------------------------------------
-### Exemplo com problema na gramática
+### Exemplo 1: problema na gramática
 ![image](https://github.com/BrennoKM/AnalisadorLexerSintax/assets/99992197/91e3a819-03d5-450f-9cf4-f0764d22e5f4)
 
 Saida: ![image](https://github.com/BrennoKM/AnalisadorLexerSintax/assets/99992197/5e2e517b-468f-47a6-aa44-b34a7889f30b)
 ----------------------------------------------------------------------------------------------------------------
+### Exemplo 2: erro semântico
+![image](https://github.com/BrennoKM/AnalisadorLexerSintaxSemantic/assets/99992197/361c1ed6-971e-40ba-8a02-89911b4fae3b)
+> Note que o axioma de fechamento possui MozzarellaTopping, mas em nenhum momento prévio ele foi declarado com essa propiedade.
+
+Saida: ![image](https://github.com/BrennoKM/AnalisadorLexerSintaxSemantic/assets/99992197/507f0007-b617-4743-9674-fd16f0a6f5c3)
+----------------------------------------------------------------------------------------------------------------
+
