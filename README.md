@@ -112,5 +112,4 @@ Saida: ![image](https://github.com/BrennoKM/AnalisadorLexerSintaxSemantic/assets
 > Pro analisador sintático, no exemplo acima não será encontrado nenhum problema, mas é fácil observar que os tipos de dados estão incoerentes com as cardinalidades.
 
 Saida: ![image](https://github.com/BrennoKM/AnalisadorLexerSintaxSemantic/assets/99992197/1e7ac73a-b0f5-4ee2-b60d-643c3efd6487)
-
 ----------------------------------------------------------------------------------------------------------------
